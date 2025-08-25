@@ -1,5 +1,3 @@
 import React from 'react';
-function App() {
-  return <div>AI Chat Dashboard</div>;
-}
+function App() { return <div>Working...</div>; }
 export default App;
