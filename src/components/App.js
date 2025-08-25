@@ -6,11 +6,16 @@ class App extends React.Component {
     isDarkMode: false,
     conversations: [],
     editing: false,
-    editedMessage: ''
+    editedMessage: '',
+    searchTerm: '' // New state for search
   };
 
   toggleDarkMode = () => {
     this.setState(prevState => ({ isDarkMode: !prevState.isDarkMode }));
+  };
+
+  handleSearch = (event) => {
+    this.setState({ searchTerm: event.target.value });
   };
 
   componentDidMount() {
@@ -19,28 +24,30 @@ class App extends React.Component {
       this.setState({ isDarkMode: true });
     }
 
-    // Fetch conversations from API or
-    // None
+    // Fetch conversations
+    fetch('https://api.example.com/conversations')
+      .then(response => response.json())
+      .then(data => this.setState({ conversations: data }))
+      .catch(error => console.error('Error fetching conversations:', error));
   }
 
-  startEdit = (message) => {
-    this.setState({ editing: true, editedMessage: message });
-  };
-
-  stopEdit = () => {
-    this.setState({ editing: false, editedMessage: '' });
-  };
-
-  saveEdit = () => {
-    // Save the edited message to the state or API
-    this.setState({ editing: false, editedMessage: '' });
-  };
-
   render() {
+    const { conversations, searchTerm, isDarkMode } = this.state;
+    const filteredConversations = conversations.filter(conversation =>
+      conversation.text.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     return (
-      <div className={this.state.isDarkMode ? 'dark-mode' : 'light-mode'}>
-        {/* Render timestamp, conversations, etc. */}
-        {/* None */}
+      <div className={isDarkMode ? 'dark-mode' : 'light-mode'}>
+        <input type="text" placeholder="Search..." onChange={this.handleSearch} />
+        <ul>
+          {filteredConversations.map(conversation => (
+            <li key={conversation.id}>{conversation.text}</li>
+          ))}
+        </ul>
+        <button onClick={this.toggleDarkMode}>
+          {isDarkMode ? 'Light Mode' : 'Dark Mode'}
+        </button>
       </div>
     );
   }
