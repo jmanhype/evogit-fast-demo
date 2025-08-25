@@ -4,7 +4,9 @@ class App extends React.Component {
   state = {
     timestamp: new Date().toLocaleString(),
     isDarkMode: false,
-    conversations: []
+    conversations: [],
+    editing: false,
+    editedMessage: ''
   };
 
   toggleDarkMode = () => {
@@ -21,29 +23,25 @@ class App extends React.Component {
     // None
   }
 
-  deleteMessage = (index) => {
-    const updatedConversations = [...this.state.conversations];
-    updatedConversations.splice(index, 1);
-    this.setState({ conversations: updatedConversations });
+  startEdit = (message) => {
+    this.setState({ editing: true, editedMessage: message });
+  };
+
+  stopEdit = () => {
+    this.setState({ editing: false, editedMessage: '' });
+  };
+
+  saveEdit = () => {
+    // Save the edited message to the state or API
+    this.setState({ editing: false, editedMessage: '' });
   };
 
   render() {
     return (
       <div className={this.state.isDarkMode ? 'dark-mode' : 'light-mode'}>
-        <button onClick={this.toggleDarkMode}>
-          {this.state.isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-        </button>
-        <ul>
-          {this.state.conversations.map((conversation, index) => (
-            <li key={index}>
-              {conversation.message}
-              <button onClick={() => this.deleteMessage(index)}>Delete</button>
-            </li>
-          ))}
-        </ul>
+        {/* Render timestamp, conversations, etc. */}
+        {/* None */}
       </div>
     );
   }
 }
-
-export default App;
